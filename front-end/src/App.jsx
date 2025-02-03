@@ -1,4 +1,10 @@
+
+import Home from "./Home";
+import Nav from "./Nav";
 const App = () => {
-	return <div className="bg-red-700 text-8xl">Apdsdspsdbsjdbs</div>;
-}
+	return <div className="">
+		<Nav />
+		<Home/>
+	</div>;
+};
 export default App;
