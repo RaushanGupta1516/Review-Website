@@ -2,11 +2,13 @@ import { makeStyles } from '@mui/styles';
 
 export default makeStyles({
   media: {
-    height: 0,
-    paddingTop: '56.25%',
-    backgroundColor: 'rgba(190, 23, 23, 0.5)',
+    height: 250, // Set a proper height
+    width: '100%',
+    objectFit: 'cover', // Ensures the image covers the area properly
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
     backgroundBlendMode: 'darken',
   },
+  
   border: {
     border: 'solid',
   },

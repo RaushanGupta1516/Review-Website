@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import useStyles from '../../style';
+import useStyles from './styles'; 
 import { TextField, Button, Typography, Paper } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { createPost } from '../../actions/posts';

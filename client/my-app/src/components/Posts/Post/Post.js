@@ -1,5 +1,5 @@
 import React from 'react'
-import useStyles from '../../../style';
+import useStyles from './styles'; 
 import {Card, CardActions, CardContent, CardMedia, Button, Typography} from '@mui/material';
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -13,18 +13,20 @@ const Post = ({post}) => {
   return (
     <Card className={classes.card}>
       <CardMedia 
-  className={classes.media} 
-  component="img" 
-  image={post.selectedFile || "https://via.placeholder.com/150"} 
+  className={classes.media}
+  component="img"
+  image={post.selectedFile || "https://via.placeholder.com/150"}
+  onError={(e) => e.target.src = "https://via.placeholder.com/150"}
   alt={post.title}
 />
+
        
       <div className={classes.overlay}>
         <Typography variant="h6">{post.creator}</Typography>
         <Typography variant="body2">{moment(post.createdAt).fromNow()}</Typography>
       </div>
       <div className={classes.overlay2}>
-        <Button style={{color: 'white'}} size="small" onClick={() => {}}>
+        <Button style={{color: 'black'}} size="small" onClick={() => {}}>
           <MoreHorizIcon fontSize="default"/>
         </Button>
       </div>
