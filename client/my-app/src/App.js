@@ -8,13 +8,14 @@ import { useDispatch } from 'react-redux';
 import { getPosts } from './actions/posts'; 
 
 function App() {
-  const [currentId, setCurrentId] = useState(null);
+  const [currentId, setCurrentId] = useState(0);
   const classes = useStyles();
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getPosts());
   }, [currentId, dispatch]);
+  
   return (
    <Container maxWidth="lg">
       <AppBar position="static" color="inherit" className={classes.appBar}>

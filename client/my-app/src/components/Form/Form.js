@@ -1,89 +1,126 @@
 import React, { useState, useEffect } from 'react';
-import useStyles from './styles';
 import { TextField, Button, Typography, Paper } from '@mui/material';
-import { useDispatch } from 'react-redux';
-import { createPost, updatePost } from '../../actions/posts';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import FileBase from 'react-file-base64';
 
+import useStyles from './styles';
+import { createPost, updatePost } from '../../actions/posts';
 
 const Form = ({ currentId, setCurrentId }) => {
+  const dispatch = useDispatch();
+  const classes = useStyles();
+
+  // ✅ Ensure tags is always initialized as an array
   const [postData, setPostData] = useState({
     creator: '',
     title: '',
     message: '',
-    tags: '',
+    tags: [], 
     selectedFile: '',
   });
-  const post = useSelector((state) => currentId ? state.posts.find((p) => p._id === currentId) : null);
-  
 
-  const classes = useStyles();
-  const dispatch = useDispatch();
+  const post = useSelector((state) =>
+    currentId ? state.posts.find((message) => message._id === currentId) : null
+  );
 
+  // ✅ Ensure postData is updated correctly and tags is always an array
   useEffect(() => {
-    if (post) setPostData(post);
-
-  },[post])
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    if (currentId) {
-      dispatch(updatePost(currentId, postData));
-    } else {
-      dispatch(createPost(postData));
+    if (post) {
+      setPostData({ 
+        ...post, 
+        tags: Array.isArray(post.tags) ? post.tags : post.tags?.split(',').map(tag => tag.trim()) || []
+      });
     }
-
-    clear();
-    setCurrentId(null);
-  };
-
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onloadend = () => {
-        setPostData((prevData) => ({ ...prevData, selectedFile: reader.result }));
-      };
-    }
-  };
+  }, [post]);
 
   const clear = () => {
-    setPostData({
-      creator: '',
-      title: '',
-      message: '',
-      tags: '',
-      selectedFile: '',
+    setCurrentId(0);
+    setPostData({ 
+      creator: '', 
+      title: '', 
+      message: '', 
+      tags: [], // ✅ Reset to empty array
+      selectedFile: '' 
     });
-    setCurrentId(null);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (currentId === 0) {
+      dispatch(createPost(postData));
+    } else {
+      dispatch(updatePost(currentId, postData));
+    }
+    
+    clear();
   };
 
   return (
-    <div className={classes.container}>
-      <Paper className={classes.paper}>
-        <form autoComplete="off" noValidate className={`${classes.root} ${classes.form}`} onSubmit={handleSubmit}>
-          <Typography variant="h6">{currentId ? 'Editing' : 'Creating'} a Stay-Story</Typography>
-          <TextField name="creator" variant="outlined" label="Creator" fullWidth value={postData.creator} onChange={(e) => setPostData({ ...postData, creator: e.target.value })} />
-          <TextField name="title" variant="outlined" label="Title" fullWidth value={postData.title} onChange={(e) => setPostData({ ...postData, title: e.target.value })} />
-          <TextField name="message" variant="outlined" label="Message" fullWidth value={postData.message} onChange={(e) => setPostData({ ...postData, message: e.target.value })} />
-          <TextField name="tags" variant="outlined" label="Tags (comma-separated)" fullWidth value={postData.tags} onChange={(e) => setPostData({ ...postData, tags: e.target.value })} />
+    <Paper className={classes.paper}>
+      <form autoComplete="off" noValidate className={`${classes.root} ${classes.form}`} onSubmit={handleSubmit}>
+        <Typography variant="h6">
+          {currentId ? `Editing "${post?.title}"` : 'Creating a Stay-Story'}
+        </Typography>
 
-          <div className={classes.fileInput}>
-            <Typography variant="subtitle1">Choose a File:</Typography>
-            <input type="file" accept="image/*" onChange={handleFileChange} />
-          </div>
+        <TextField 
+          name="creator" 
+          variant="outlined" 
+          label="Creator" 
+          fullWidth 
+          value={postData.creator} 
+          onChange={(e) => setPostData({ ...postData, creator: e.target.value })} 
+        />
 
-          <Button className={classes.buttonSubmit} variant="contained" color="primary" size="large" type="submit" fullWidth>
-            Submit
-          </Button>
-          <Button variant="contained" color="secondary" size="small" onClick={clear} fullWidth>
-            Clear
-          </Button>
-        </form>
-      </Paper>
-    </div>
+        <TextField 
+          name="title" 
+          variant="outlined" 
+          label="Name of your stay" 
+          fullWidth 
+          value={postData.title} 
+          onChange={(e) => setPostData({ ...postData, title: e.target.value })} 
+        />
+
+        <TextField 
+          name="message" 
+          variant="outlined" 
+          label="Story" 
+          fullWidth 
+          multiline 
+          rows={4} 
+          value={postData.message} 
+          onChange={(e) => setPostData({ ...postData, message: e.target.value })} 
+        />
+
+        {/* ✅ Ensure value is always a string by checking if tags is an array */}
+        <TextField 
+          name="tags" 
+          variant="outlined" 
+          label="Tags (comma separated)" 
+          fullWidth 
+          value={Array.isArray(postData.tags) ? postData.tags.join(', ') : ''} 
+          onChange={(e) => setPostData({ 
+            ...postData, 
+            tags: e.target.value.split(',').map(tag => tag.trim()) 
+          })} 
+        />
+
+        <div className={classes.fileInput}>
+          <FileBase 
+            type="file" 
+            multiple={false} 
+            onDone={({ base64 }) => setPostData({ ...postData, selectedFile: base64 })} 
+          />
+        </div>
+
+        <Button className={classes.buttonSubmit} variant="contained" color="primary" size="large" type="submit" fullWidth>
+          Submit
+        </Button>
+        <Button variant="contained" color="secondary" size="small" onClick={clear} fullWidth>
+          Clear
+        </Button>
+      </form>
+    </Paper>
   );
 };
 
