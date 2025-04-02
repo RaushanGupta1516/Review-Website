@@ -3,6 +3,7 @@
 .navbox {
     display: flex;
     justify-content: space-around;
+    width: 100%;
     align-items: center;
     padding: 12px 30px;
     background: linear-gradient(135deg, #1a1a2e, #16213e);
