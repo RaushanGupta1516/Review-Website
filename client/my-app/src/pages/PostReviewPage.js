@@ -65,11 +65,11 @@ const PostReviewPage = () => {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-
+	
 		const formData = new FormData();
 		Object.keys(data).forEach((key) => {
 			if (key === "image" && data.image) {
-				formData.append("image", data.image); 
+				formData.append("image", data.image);
 			} else if (key === "facilitiesRating") {
 				Object.entries(data.facilitiesRating).forEach(([ratingKey, ratingValue]) => {
 					formData.append(`facilitiesRating[${ratingKey}]`, ratingValue);
@@ -80,8 +80,10 @@ const PostReviewPage = () => {
 				formData.append(key, data[key]);
 			}
 		});
-		
-
+	
+		// ✅ Ensure "name" is stored as "user" for consistency
+		formData.append("user", data.name);  
+	
 		try {
 			const res = await axios.post(url + "/review", formData, {
 				headers: {
@@ -89,14 +91,14 @@ const PostReviewPage = () => {
 					token: token, 
 				},
 			});
-			
+	
 			if (res.data.success) {
 				setData({
 					name: "",
 					location: "",
 					reviewText: "",
 					rating: "",
-					image: null, 
+					image: null,
 					priceRange: "",
 					roomType: "",
 					facilities: [],
@@ -117,6 +119,7 @@ const PostReviewPage = () => {
 			toast.error(error.response?.data?.message || "Something went wrong");
 		}
 	};
+	
 
 	return (
 		<div className="add-review-container">

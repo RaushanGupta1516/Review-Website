@@ -9,7 +9,7 @@ const reviewSchema = new mongoose.Schema({
 		url: String,
 		filename: String,
 	},
-	user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+	user: { type: String, required: true },
 
 	priceRange: { type: String, required: false },
 

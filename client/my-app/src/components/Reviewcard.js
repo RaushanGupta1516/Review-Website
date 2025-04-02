@@ -2,32 +2,35 @@ import { useState } from "react";
 import "./Reviewcard.css";
 import { Link } from "react-router-dom";
 
-const Reviewcard = ({ id, name, location, reviewText,rating, image,user,facilities}) => {
-	
-	return (
+const Reviewcard = ({ id, name, location, reviewText, rating, image, user, facilities }) => {
+	const [likeCount, setLikeCount] = useState(1);
+	const [liked, setLiked] = useState(false);
 
-		<Link to={`/review/${id}`}className="reviewcard">
-		
-			<img src={image.url}  alt="pgpic" className="hostel-img" />
-       
-		
+	const handleLikeClick = () => {
+		setLikeCount((prevCount) => (liked ? prevCount - 1 : prevCount + 1));
+		setLiked(!liked);
+	};
+
+	return (
+		<div className="reviewcard">
+			<img src={image.url} alt="pgpic" className="hostel-img" />
+
 			<div className="reviewcontent">
 				<div className="nameadd">
 					<h2>{name}</h2>
-					<p className="location">{ location}</p>
+					<p className="location">{location}</p>
 				</div>
-				<p className="review-text">
-					{reviewText}
-				</p>
+				<p className="review-text">{reviewText}</p>
 				<div className="reviewlike">
-					<p className="rating">⭐ Rating: { rating}/5</p>
+					<p className="rating">⭐ Rating: {rating}/5</p>
 					<div className="review-actions">
-						<button className="like-btn">👍 12</button>
-						<button className="dislike-btn">👎 2</button>
+						<button className="like-btn" onClick={handleLikeClick}>
+							👍 {likeCount}
+						</button>
 					</div>
 				</div>
 				<p className="author-name">
-					Reviewed by: <strong>{ user}</strong>
+					Reviewed by: <strong>{name ? name : "Anonymous"}</strong> 
 				</p>
 
 				<div className="tags">
@@ -42,7 +45,7 @@ const Reviewcard = ({ id, name, location, reviewText,rating, image,user,faciliti
 					)}
 				</div>
 			</div>
-		</Link>
+		</div>
 	);
 };
 

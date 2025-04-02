@@ -87,3 +87,61 @@ module.exports.showReview = async (req, res) => {
 		res.status(500).json({ message: "Error fetching review details", error });
 	}
 };
+
+module.exports.deleteReview = async (req, res) => {
+	try {
+		const reviewId = req.params.id;
+		const review = await Review.findById(reviewId);
+
+		if (!review) {
+			return res.status(404).json({ message: "Review not found" });
+		}
+
+		await Review.findByIdAndDelete(reviewId);
+		res.json({ success: true, message: "Review deleted successfully" });
+	} catch (error) {
+		res.status(500).json({ message: "Error deleting review", error });
+	}
+}	
+module.exports.updateReview = async (req, res) => {
+	try {
+		const reviewId = req.params.id;
+		const updatedData = req.body;
+
+		const updatedReview = await Review.findByIdAndUpdate(reviewId, updatedData, {
+			new: true,
+		});
+
+		if (!updatedReview) {
+			return res.status(404).json({ message: "Review not found" });
+		}
+
+		res.json({ success: true, review: updatedReview });
+	} catch (error) {
+		res.status(500).json({ message: "Error updating review", error });
+	}
+};
+module.exports.likeReview = async (req, res) => {
+	try {
+		const reviewId = req.params.id;
+		const userId = req.body.userId;
+
+		const review = await Review.findById(reviewId);
+
+		if (!review) {
+			return res.status(404).json({ message: "Review not found" });
+		}
+
+		if (review.likes.includes(userId)) {
+			return res.status(400).json({ message: "You have already liked this review" });
+		}
+
+		review.likes.push(userId);
+		await review.save();
+
+		res.json({ success: true, message: "Review liked successfully", review });
+	} catch (error) {
+		res.status(500).json({ message: "Error liking review", error });
+	}
+
+};

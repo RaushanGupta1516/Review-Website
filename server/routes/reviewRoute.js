@@ -11,6 +11,8 @@ router.get("/", reviewController.getReviewData);
 router.post("/", isverified, reviewController.addReview);
 
 router.get("/:id", reviewController.showReview);
+router.delete("/:id", isverified, reviewController.deleteReview);
+router.post("/:id/like", isverified, reviewController.likeReview);
 
 
 
