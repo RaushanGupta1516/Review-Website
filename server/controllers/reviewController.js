@@ -24,25 +24,25 @@ module.exports.addReview = async (req, res) => {
 	try {
 		console.log("Request Body:", req.body);
 		const file = req.files.image;
-     
+
 		console.log("Uploaded Files:", file);
 
 		const uploadResult = await cloudinary.uploader.upload(file.tempFilePath);
 
 
 		const facilities = Array.isArray(req.body["facilities[]"])
-		? req.body["facilities[]"]
+			? req.body["facilities[]"]
 			: [req.body["facilities[]"]].filter(Boolean);
-		
-		
+
+
 		const facilitiesRating = {
 			cleanliness: Number(req.body["facilitiesRating[cleanliness]"]) || 0,
 			food: Number(req.body["facilitiesRating[food]"]) || 0,
 			security: Number(req.body["facilitiesRating[security]"]) || 0,
 			internet: Number(req.body["facilitiesRating[internet]"]) || 0,
-		  };
+		};
 
-			const newReview = new Review({
+		const newReview = new Review({
 			name: req.body.name,
 			location: req.body.location,
 			reviewText: req.body.reviewText,
@@ -54,10 +54,10 @@ module.exports.addReview = async (req, res) => {
 			user: req.body.userid,
 			priceRange: req.body.priceRange,
 			roomType: req.body.roomType,
-			facilities:facilities,
+			facilities: facilities,
 			pgType: req.body.pgType,
 			preferredTenant: req.body.preferredTenant,
-			facilitiesRating:facilitiesRating,
+			facilitiesRating: facilitiesRating,
 		});
 
 		await newReview.save();
@@ -102,7 +102,7 @@ module.exports.deleteReview = async (req, res) => {
 	} catch (error) {
 		res.status(500).json({ message: "Error deleting review", error });
 	}
-}	
+}
 module.exports.updateReview = async (req, res) => {
 	try {
 		const reviewId = req.params.id;
@@ -123,25 +123,41 @@ module.exports.updateReview = async (req, res) => {
 };
 module.exports.likeReview = async (req, res) => {
 	try {
+		const userId = req.user.id;
 		const reviewId = req.params.id;
-		const userId = req.body.userId;
+
+		if (!userId) {
+			return res.status(401).json({ success: false, message: "User not logged in" });
+		}
 
 		const review = await Review.findById(reviewId);
-
 		if (!review) {
-			return res.status(404).json({ message: "Review not found" });
+			return res.status(404).json({ success: false, message: "Review not found" });
 		}
 
-		if (review.likes.includes(userId)) {
-			return res.status(400).json({ message: "You have already liked this review" });
+		const alreadyLiked = review.likes.includes(userId);
+
+		if (alreadyLiked) {
+			review.likes.pull(userId); 
+		} else {
+			review.likes.push(userId); 
 		}
 
-		review.likes.push(userId);
 		await review.save();
 
-		res.json({ success: true, message: "Review liked successfully", review });
+		res.json({
+			success: true,
+			message: alreadyLiked ? "Review unliked" : "Review liked",
+			liked: !alreadyLiked,
+			totalLikes: review.likes.length,
+		});
 	} catch (error) {
-		res.status(500).json({ message: "Error liking review", error });
+		console.error("Error in likeReview:", error);
+		res.status(500).json({
+			success: false,
+			message: "Internal server error",
+			error: error.message,
+		});
 	}
-
 };
+

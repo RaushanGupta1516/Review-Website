@@ -38,6 +38,7 @@ function App() {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/post-review" element={<ProtectedRoute element={<PostReviewPage />} />} />
                 <Route path="/review/:id" element={<ReviewDetailPage />} />
+                
             </Routes>
     </div>
   );

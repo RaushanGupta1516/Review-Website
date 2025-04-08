@@ -1,14 +1,13 @@
-
 import { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom"; 
 import { toast } from "react-toastify";
 import axios from "axios";
 import { StoreContext } from "../StoreContext";
 
 import './Login.css';
+
 const Login = ({ setshowLogin }) => {
-    const apiUrl = "http://localhost:2000";
-    const {setToken } = useContext(StoreContext);
+	const apiUrl = "http://localhost:2000";
+	const { setToken, getUserData } = useContext(StoreContext); 
 	const [page, setPage] = useState("Sign up");
 	const [data, setdata] = useState({
 		name: "",
@@ -24,16 +23,21 @@ const Login = ({ setshowLogin }) => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		let endpoint = page === "Login" ? "/user/login" : "/user/signup";
-		
+
 		try {
 			const res = await axios.post(apiUrl + endpoint, data);
 			if (res.data.success) {
-                setshowLogin(false);
-                setToken(res.data.token);
-                localStorage.setItem("token", res.data.token);
-                toast.success("Logged in successfully");
+				const token = res.data.token;
+
+				setToken(token);
+				localStorage.setItem("token", token);
+
+				await getUserData(token);
+
+				setshowLogin(false);
+				toast.success("Logged in successfully");
 			} else {
-				toast.error("Logging Failed");
+				toast.error("Login failed");
 			}
 		} catch (error) {
 			toast.error(error.response?.data?.message || "An error occurred");
@@ -43,7 +47,6 @@ const Login = ({ setshowLogin }) => {
 	return (
 		<div className="login-overlay">
 			<div className="login-container">
-				{/* Close Button */}
 				<button onClick={() => setshowLogin(false)} className="close-btn">⨯</button>
 
 				<h2 className="login-title">{page}</h2>

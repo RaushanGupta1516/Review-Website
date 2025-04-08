@@ -81,7 +81,6 @@ const PostReviewPage = () => {
 			}
 		});
 	
-		// ✅ Ensure "name" is stored as "user" for consistency
 		formData.append("user", data.name);  
 	
 		try {

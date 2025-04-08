@@ -10,7 +10,7 @@ const ReviewDetailPage = () => {
   useEffect(() => {
     const fetchReview = async () => {
       try {
-        const response = await axios.get(`http://localhost:2000/review/${id}`);
+        const response = await axios.get(`http://localhost:2000/reviewRoute/${id}`);
         setReview(response.data);
       } catch (error) {
         console.error("Error fetching review details:", error);
