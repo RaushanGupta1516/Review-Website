@@ -1,26 +1,26 @@
+
+
+
 const jwt = require("jsonwebtoken");
 const jwtSecret = process.env.JWTSECRET;
 
+
 module.exports.isverified = (req, res, next) => {
-	let token = req.headers.token;
 
-	if (!token && req.headers.authorization) {
-		const parts = req.headers.authorization.split(" ");
-		if (parts.length === 2 && parts[0] === "Bearer") {
-			token = parts[1];
-		}
-	}
+    const authHeader = req.headers.authorization;
+    
 
-	if (!token) {
-		return res.status(401).json({ success: false, message: "Not Logged in" });
-	}
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+        return res.status(403).json({ success: false, message: "Access Denied: No token provided" });
+    }
 
-	try {
-		const decodedtoken = jwt.verify(token, jwtSecret);
-		req.user = { id: decodedtoken.id }; 
-		next();
-	} catch (error) {
-		console.error("JWT verification error:", error);
-		res.status(401).json({ success: false, message: "Invalid token" });
-	}
-};
+    const token = authHeader.split(" ")[1];
+    try {
+        const decoded = jwt.verify(token, jwtSecret);
+        req.body.userid = decoded.id;
+        next();
+    } catch (error) {
+        res.status(403).json({ success: false, message: "Invalid token" });
+    }
+ 
+}

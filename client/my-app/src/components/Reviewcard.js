@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import "./Reviewcard.css";
-
+import { Link } from "react-router-dom";
 const Reviewcard = ({
 	id,
 	name,
@@ -11,8 +11,6 @@ const Reviewcard = ({
 	image,
 	facilities,
 	likes = [],
-	
-
 }) => {
 	const [likeCount, setLikeCount] = useState(likes.length || 0);
 	const [liked, setLiked] = useState(false);
@@ -63,7 +61,9 @@ const Reviewcard = ({
 
 			if (response.ok && data.success) {
 				setLiked((prevLiked) => {
-					setLikeCount((prevCount) => (prevLiked ? prevCount - 1 : prevCount + 1));
+					setLikeCount((prevCount) =>
+						prevLiked ? prevCount - 1 : prevCount + 1
+					);
 					return !prevLiked;
 				});
 			} else {
@@ -80,12 +80,15 @@ const Reviewcard = ({
 
 	return (
 		<div className="reviewcard">
-			<img
-				src={image?.url || "/default-image.jpg"}
-				alt="pgpic"
-				className="hostel-img"
-			/>
-
+			<Link to={`/review/${id}`} className="reviewcard-link">
+			<div>
+				<img
+					src={image?.url || "/default-image.jpg"}
+					alt="pgpic"
+					className="hostel-img"
+				/>
+			</div>
+			</Link>
 			<div className="reviewcontent">
 				<div className="nameadd">
 					<h2>{name}</h2>
@@ -129,4 +132,3 @@ const Reviewcard = ({
 };
 
 export default Reviewcard;
-

@@ -1,14 +1,23 @@
 import { createContext, useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-
+import { jwtDecode } from "jwt-decode";
 export const StoreContext = createContext(null);
 
 const StoreContextProvider = (props) => {
+	const [user, setUser] = useState("");
 	const [token, setToken] = useState("");
 	const [loggedInUser, setLoggedInUser] = useState(null);
 	const [review_list, setreview_list] = useState([]);
 	const apiUrl = "http://localhost:2000";
+
+	useEffect(() => {
+		if (token) {
+			const decoded = jwtDecode(token); 
+			 console.log(decoded);	
+			setUser({ id: decoded.id, email: decoded.email, name: decoded.name });
+		}
+	}, [token]);
 
 	const getReviewList = async () => {
 		try {
@@ -53,6 +62,8 @@ const StoreContextProvider = (props) => {
 		loggedInUser,
 		setLoggedInUser,
 		getUserData, 
+		user,
+		setUser,
 	};
 
 	return (

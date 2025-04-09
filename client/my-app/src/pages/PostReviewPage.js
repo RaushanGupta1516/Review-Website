@@ -81,13 +81,12 @@ const PostReviewPage = () => {
 			}
 		});
 	
-		formData.append("user", data.name);  
 	
 		try {
 			const res = await axios.post(url + "/review", formData, {
 				headers: {
 					"Content-Type": "multipart/form-data",
-					token: token, 
+					Authorization: `Bearer ${token}` , 
 				},
 			});
 	

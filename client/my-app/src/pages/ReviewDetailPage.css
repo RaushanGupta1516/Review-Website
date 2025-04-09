@@ -1,84 +1,108 @@
 /* ReviewDetailPage.css */
 .review-detail-container {
-    max-width: 900px;
-    margin: 50px auto;
-    padding: 20px;
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    text-align: left;
-    font-family: "Poppins", sans-serif;
-  }
-  
-  .review-detail-img {
-    width: 100%;
-    max-height: 400px;
-    object-fit: cover;
-    border-radius: 8px;
-    margin-bottom: 20px;
-  }
-  
-  h1 {
-    font-size: 28px;
-    font-weight: 600;
-    color: #333;
-    text-align: center;
-  }
-  
-  p {
-    font-size: 16px;
-    color: #555;
-    line-height: 1.6;
-    margin: 8px 0;
-  }
-  
-  strong {
-    color: #222;
-  }
-  
-  .facilities-section, .facilities-rating {
-    margin-top: 20px;
-    padding: 15px;
-    background: #f8f9fa;
-    border-radius: 8px;
-  }
-  
-  .facilities-section h3, .facilities-rating h3 {
-    font-size: 20px;
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 10px;
-    border-bottom: 2px solid #ddd;
-    padding-bottom: 5px;
-  }
-  
-  ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  ul li {
-    background: #eef2f7;
-    margin: 6px 0;
-    padding: 10px;
-    border-radius: 5px;
-    font-size: 15px;
-    color: #444;
-    display: flex;
-    align-items: center;
-  }
-  
-  ul li::before {
-    content: "✔";
-    color: #28a745;
-    font-weight: bold;
-    margin-right: 10px;
-  }
-  
-  .rating {
-    font-size: 18px;
-    font-weight: 500;
-    color: #ff9800;
-  }
+  max-width: 900px;
+  margin: 50px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: left;
+  font-family: "Poppins", sans-serif;
+}
 
-  
+.review-detail-img {
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+h1 {
+  font-size: 28px;
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+}
+
+p {
+  font-size: 16px;
+  color: #555;
+  line-height: 1.6;
+  margin: 8px 0;
+}
+
+strong {
+  color: #222;
+}
+
+.facilities-section, .facilities-rating {
+  margin-top: 20px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.facilities-section h3, .facilities-rating h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 10px;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 5px;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+ul li {
+  background: #eef2f7;
+  margin: 6px 0;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 15px;
+  color: #444;
+  display: flex;
+  align-items: center;
+}
+
+ul li::before {
+  content: "✔";
+  color: #28a745;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.rating {
+  font-size: 18px;
+  font-weight: 500;
+  color: #ff9800;
+}
+
+.review-buttons {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.edit-btn, .delete-btn {
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.edit-btn {
+  background-color: #4caf50;
+  color: white;
+}
+
+.delete-btn {
+  background-color: #f44336;
+  color: white;
+}
+
+

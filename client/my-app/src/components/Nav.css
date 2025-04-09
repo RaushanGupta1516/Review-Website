@@ -46,6 +46,16 @@
     color: #ffcc00;
 }
 
+.userbox{
+    display: flex;
+}
+#userName{
+    color: rgb(240, 240, 243);
+    font-size: large;
+    padding-right: 5px;
+}
+
+
 
 #search {
     padding: 8px 12px;

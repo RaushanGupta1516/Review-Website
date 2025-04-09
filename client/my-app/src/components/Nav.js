@@ -4,13 +4,14 @@ import { StoreContext } from "../StoreContext";
 import { useContext } from "react";
 import { toast } from "react-toastify";
 const Nav = ({ setshowLogin }) => {
-  const { token, setToken } = useContext(StoreContext);
+  const { token, setToken,setUser,user } = useContext(StoreContext);
   const navigate = useNavigate();
 
   const logOut = () => {
     localStorage.removeItem("token");
     setToken("");
     navigate("/");
+    setUser("");
     toast.success("Logged out successfully");
   };
   return (
@@ -39,7 +40,10 @@ const Nav = ({ setshowLogin }) => {
             Signup
           </button>
         ) : (
-          <button onClick={logOut}>Logout</button>
+          <div className="userbox">
+          <p id="userName">Hi,{ user.name}</p>
+                 <button onClick={logOut}>Logout</button>
+        </div>
         )}
       </div>
     </div>

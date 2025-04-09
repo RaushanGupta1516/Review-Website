@@ -15,6 +15,7 @@ import { ToastContainer } from "react-toastify";
 import { StoreContext } from "./StoreContext";
 import { useContext } from "react";
 import { toast } from "react-toastify";
+import EditReviewPage from './pages/EditReviewpage';
 
 function App() {
 
@@ -37,7 +38,8 @@ function App() {
             <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/post-review" element={<ProtectedRoute element={<PostReviewPage />} />} />
-                <Route path="/review/:id" element={<ReviewDetailPage />} />
+        <Route path="/review/:id" element={<ReviewDetailPage />} />
+        <Route path="/edit-review/:id" element={<EditReviewPage />} />
                 
             </Routes>
     </div>

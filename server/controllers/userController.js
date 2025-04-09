@@ -6,8 +6,12 @@ const { OAuth2Client } = require("google-auth-library");
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
-const createToken = (id) => {
-  return jwt.sign({ id }, process.env.JWTSECRET, { expiresIn: "7d" });
+
+const createToken = (user) => {
+  return jwt.sign(
+      { id: user._id, email: user.email, name: user.name },  
+      process.env.JWTSECRET,
+  );
 };
 
 module.exports.signup = async (req, res) => {
@@ -33,7 +37,7 @@ module.exports.signup = async (req, res) => {
     });
 
     const savedUser = await newUser.save();
-    const token = createToken(savedUser._id);
+    const token = createToken(savedUser); 
     res.json({ success: true, token });
   } catch (error) {
     console.log(error);
@@ -53,7 +57,7 @@ module.exports.login = async (req, res) => {
       return res.json({ success: false, message: "Wrong password" });
     }
 
-    const token = createToken(userExist._id);
+    const token = createToken(userExist); 
     res.json({ success: true, token });
   } catch (error) {
     console.log(error);
@@ -77,14 +81,14 @@ module.exports.googleLogin = async (req, res) => {
       user = new User({
         name,
         email,
-        password: "", // Google users don't need password
+        password: "",
         googleId,
       });
       await user.save();
     }
 
-    const jwtToken = createToken(user._id);
-    res.json({ success: true, token: jwtToken });
+    const token = createToken(user);
+    res.json({ success: true, token });
   } catch (err) {
     console.error("Google login error", err);
     res.status(401).json({ success: false, message: "Invalid Google token" });
