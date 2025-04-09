@@ -45,14 +45,11 @@ module.exports.addReview = async (req, res) => {
 		};
 
 		// Validate required fields
-		if (!req.user || !req.user.id) {
+		if ( !req.body.userid) {
 			return res.status(400).json({ success: false, message: "User ID is required from token." });
 		}
 
-		if (!req.body.roomType || req.body.roomType.trim() === '') {
-			return res.status(400).json({ success: false, message: "Room type is required." });
-		}
-
+		
 		// Create and save the new review
 		const newReview = new Review({
 			name: req.body.name,
@@ -63,7 +60,7 @@ module.exports.addReview = async (req, res) => {
 				url: uploadResult.url,
 				filename: uploadResult.original_filename,
 			},
-			user: req.user.id, // Use ID from token
+			user: req.body.userid, 
 			priceRange: req.body.priceRange,
 			roomType: req.body.roomType,
 			facilities: facilities,
@@ -192,7 +189,7 @@ module.exports.updateReview = async (req, res) => {
 // Like or unlike a review
 module.exports.likeReview = async (req, res) => {
 	try {
-		const userId = req.user.id;
+		const userId = req.body.userid;
 		const reviewId = req.params.id;
 
 		if (!userId) {
