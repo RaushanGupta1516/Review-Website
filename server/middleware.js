@@ -26,16 +26,6 @@ module.exports.isverified = (req, res, next) => {
 		return res.status(401).json({ success: false, message: "Not logged in or token missing" });
 	}
 
-    const token = authHeader.split(" ")[1];
-    try {
-        const decoded = jwt.verify(token, jwtSecret);
-        req.body.userid = decoded.id;
-        next();
-    } catch (error) {
-        res.status(403).json({ success: false, message: "Invalid token" });
-    }
- 
-}
 	try {
 		const decoded = jwt.verify(token, jwtSecret);
 		req.user = { id: decoded.id }; 
