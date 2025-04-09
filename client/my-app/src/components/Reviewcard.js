@@ -11,6 +11,8 @@ const Reviewcard = ({
 	image,
 	facilities,
 	likes = [],
+	
+
 }) => {
 	const [likeCount, setLikeCount] = useState(likes.length || 0);
 	const [liked, setLiked] = useState(false);
@@ -127,3 +129,4 @@ const Reviewcard = ({
 };
 
 export default Reviewcard;
+
