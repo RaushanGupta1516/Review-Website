@@ -65,13 +65,16 @@ module.exports.login = async (req, res) => {
   }
 };
 
+
 module.exports.googleLogin = async (req, res) => {
-  const { token } = req.body;
+  const { token } = req.body; 
+
   try {
     const ticket = await client.verifyIdToken({
       idToken: token,
       audience: process.env.GOOGLE_CLIENT_ID,
     });
+
     const payload = ticket.getPayload();
     const { email, name, sub: googleId } = payload;
 
@@ -81,16 +84,17 @@ module.exports.googleLogin = async (req, res) => {
       user = new User({
         name,
         email,
-        password: "",
+        password: "", 
         googleId,
       });
       await user.save();
     }
 
-    const token = createToken(user);
-    res.json({ success: true, token });
+    const authToken = createToken(user); 
+    res.json({ success: true, token: authToken });
   } catch (err) {
     console.error("Google login error", err);
     res.status(401).json({ success: false, message: "Invalid Google token" });
   }
 };
+
