@@ -1,98 +1,71 @@
-/* ReviewDetailPage.css */
 .review-detail-container {
-  max-width: 900px;
-  margin: 50px auto;
-  padding: 20px;
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  text-align: left;
-  font-family: "Poppins", sans-serif;
+  border: 2px solid #ccc;
+  border-radius: 20px;
+  background-color: #000;
+  color: #eee;
+  padding: 30px;
+  width: 80%; /* updated */
+  max-width: none; /* remove fixed limit */
+  margin: 100px auto; /* center + push down */
+  font-family: 'Comic Sans MS', cursive;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+
+/* Layout with image on left and details on right */
+.review-content {
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+  align-items: flex-start;
+}
+
+/* Container for title + image */
+.review-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.review-title {
+  font-size: 28px;
+  margin-bottom: 10px;
+  text-align: center;
 }
 
 .review-detail-img {
   width: 100%;
-  max-height: 400px;
+  max-width: 400px;
+  height: auto;
   object-fit: cover;
-  border-radius: 8px;
-  margin-bottom: 20px;
+  border: 2px solid #ccc;
+  border-radius: 15px;
 }
 
-h1 {
-  font-size: 28px;
-  font-weight: 600;
-  color: #333;
-  text-align: center;
-}
-
-p {
-  font-size: 16px;
-  color: #555;
-  line-height: 1.6;
-  margin: 8px 0;
-}
-
-strong {
-  color: #222;
-}
-
-.facilities-section, .facilities-rating {
-  margin-top: 20px;
-  padding: 15px;
-  background: #f8f9fa;
-  border-radius: 8px;
-}
-
-.facilities-section h3, .facilities-rating h3 {
-  font-size: 20px;
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 10px;
-  border-bottom: 2px solid #ddd;
-  padding-bottom: 5px;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-ul li {
-  background: #eef2f7;
-  margin: 6px 0;
-  padding: 10px;
-  border-radius: 5px;
-  font-size: 15px;
-  color: #444;
+.review-info {
+  flex: 2;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  gap: 10px;
 }
 
-ul li::before {
-  content: "✔";
-  color: #28a745;
-  font-weight: bold;
-  margin-right: 10px;
-}
-
-.rating {
-  font-size: 18px;
-  font-weight: 500;
-  color: #ff9800;
+.facilities-section,
+.facilities-rating {
+  margin-top: 20px;
 }
 
 .review-buttons {
   margin-top: 20px;
-  display: flex;
-  gap: 10px;
 }
 
-.edit-btn, .delete-btn {
+.edit-btn,
+.delete-btn {
+  margin-right: 10px;
   padding: 10px 20px;
   border: none;
+  border-radius: 12px;
   cursor: pointer;
-  border-radius: 5px;
-  font-size: 16px;
 }
 
 .edit-btn {
@@ -104,5 +77,3 @@ ul li::before {
   background-color: #f44336;
   color: white;
 }
-
-
