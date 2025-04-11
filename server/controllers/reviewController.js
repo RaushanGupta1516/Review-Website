@@ -10,13 +10,14 @@ cloudinary.config({
 // Get all reviews
 module.exports.getReviewData = async (req, res) => {
 	try {
-		let allReview = await Review.find({});
+		const allReview = await Review.find({}).populate("user", "name");
 		res.json({ success: true, data: allReview });
 	} catch (error) {
 		console.error("Error fetching reviews:", error);
 		res.status(500).json({ success: false, message: "Error fetching reviews" });
 	}
 };
+
 
 // Add a new review
 module.exports.addReview = async (req, res) => {
@@ -31,12 +32,10 @@ module.exports.addReview = async (req, res) => {
 		// Upload image to Cloudinary
 		const uploadResult = await cloudinary.uploader.upload(file.tempFilePath);
 
-		// Parse facilities (can be a string or array)
 		const facilities = Array.isArray(req.body["facilities[]"])
 			? req.body["facilities[]"]
 			: [req.body["facilities[]"]].filter(Boolean);
 
-		// Parse facilities rating
 		const facilitiesRating = {
 			cleanliness: Number(req.body["facilitiesRating[cleanliness]"]) || 0,
 			food: Number(req.body["facilitiesRating[food]"]) || 0,
@@ -44,13 +43,6 @@ module.exports.addReview = async (req, res) => {
 			internet: Number(req.body["facilitiesRating[internet]"]) || 0,
 		};
 
-		// Validate required fields
-		if ( !req.body.userid) {
-			return res.status(400).json({ success: false, message: "User ID is required from token." });
-		}
-
-		
-		// Create and save the new review
 		const newReview = new Review({
 			name: req.body.name,
 			location: req.body.location,
@@ -60,7 +52,7 @@ module.exports.addReview = async (req, res) => {
 				url: uploadResult.url,
 				filename: uploadResult.original_filename,
 			},
-			user: req.body.userid, 
+			user: req.user.id,
 			priceRange: req.body.priceRange,
 			roomType: req.body.roomType,
 			facilities: facilities,
@@ -79,7 +71,7 @@ module.exports.addReview = async (req, res) => {
 	} catch (error) {
 		console.error("Error adding review:", error);
 		let message = "Error occurred while saving the review.";
-		if (error.name === 'ValidationError') {
+		if (error.name === "ValidationError") {
 			message = Object.values(error.errors).map(err => err.message).join(", ");
 		}
 		res.status(500).json({
@@ -89,6 +81,7 @@ module.exports.addReview = async (req, res) => {
 	}
 };
 
+// Get a single review
 module.exports.showReview = async (req, res) => {
 	try {
 		const review = await Review.findById(req.params.id);
@@ -102,6 +95,7 @@ module.exports.showReview = async (req, res) => {
 	}
 };
 
+// Delete review
 module.exports.deleteReview = async (req, res) => {
 	try {
 		const review = await Review.findById(req.params.id);
@@ -109,7 +103,7 @@ module.exports.deleteReview = async (req, res) => {
 			return res.status(404).json({ success: false, message: "Review not found" });
 		}
 
-		if (review.user.toString() !== String(req.body.userid)) {
+		if (review.user.toString() !== req.user.id) {
 			return res.status(403).json({ success: false, message: "Unauthorized to delete this review" });
 		}
 
@@ -121,75 +115,70 @@ module.exports.deleteReview = async (req, res) => {
 	}
 };
 
-module.exports.updateReview = async (req, res) => { 
+// Update review
+module.exports.updateReview = async (req, res) => {
 	try {
 		const review = await Review.findById(req.params.id);
 		if (!review) {
-		  return res.status(404).json({ message: "Review not found" });
+			return res.status(404).json({ message: "Review not found" });
 		}
-	
-		const userId =  req.body.userid;
-		if (review.user.toString() !== userId) {
-		  return res.status(403).json({ message: "Unauthorized" });
+
+		if (review.user.toString() !== req.user.id) {
+			return res.status(403).json({ message: "Unauthorized" });
 		}
-	
-		let imageData = review.image; 
-	
+
+		let imageData = review.image;
+
 		if (req.files?.image) {
-		  const file = req.files.image;
-		  const uploadResult = await cloudinary.uploader.upload(file.tempFilePath);
-		  if (review.image?.filename) {
-			await cloudinary.uploader.destroy(review.image.filename);
-		  }
-	
-		  imageData = {
-			url: uploadResult.secure_url,
-			filename: uploadResult.public_id,
-		  };
+			const file = req.files.image;
+			const uploadResult = await cloudinary.uploader.upload(file.tempFilePath);
+			if (review.image?.filename) {
+				await cloudinary.uploader.destroy(review.image.filename);
+			}
+			imageData = {
+				url: uploadResult.secure_url,
+				filename: uploadResult.public_id,
+			};
 		}
-	
+
 		const facilities = Array.isArray(req.body["facilities[]"])
-		  ? req.body["facilities[]"]
-		  : [req.body["facilities[]"]].filter(Boolean);
-	
+			? req.body["facilities[]"]
+			: [req.body["facilities[]"]].filter(Boolean);
+
 		const facilitiesRating = {
-		  cleanliness: Number(req.body["facilitiesRating[cleanliness]"]) || 0,
-		  food: Number(req.body["facilitiesRating[food]"]) || 0,
-		  security: Number(req.body["facilitiesRating[security]"]) || 0,
-		  internet: Number(req.body["facilitiesRating[internet]"]) || 0,
+			cleanliness: Number(req.body["facilitiesRating[cleanliness]"]) || 0,
+			food: Number(req.body["facilitiesRating[food]"]) || 0,
+			security: Number(req.body["facilitiesRating[security]"]) || 0,
+			internet: Number(req.body["facilitiesRating[internet]"]) || 0,
 		};
-	
+
 		const updatedData = {
-		  name: req.body.name,
-		  location: req.body.location,
-		  reviewText: req.body.reviewText,
-		  rating: req.body.rating,
-		  image: imageData,
-		  priceRange: req.body.priceRange,
-		  roomType: req.body.roomType,
-		  facilities: facilities,
-		  pgType: req.body.pgType,
-		  preferredTenant: req.body.preferredTenant,
-		  facilitiesRating: facilitiesRating,
+			name: req.body.name,
+			location: req.body.location,
+			reviewText: req.body.reviewText,
+			rating: req.body.rating,
+			image: imageData,
+			priceRange: req.body.priceRange,
+			roomType: req.body.roomType,
+			facilities: facilities,
+			pgType: req.body.pgType,
+			preferredTenant: req.body.preferredTenant,
+			facilitiesRating: facilitiesRating,
 		};
-	
-		const updatedReview = await Review.findByIdAndUpdate(
-		  req.params.id,
-		  updatedData,
-		  { new: true }
-		);
-	
+
+		const updatedReview = await Review.findByIdAndUpdate(req.params.id, updatedData, { new: true });
+
 		res.json({ success: true, updatedReview });
-	
-	  } catch (error) {
+	} catch (error) {
 		console.error("Update error:", error);
 		res.status(500).json({ message: "Server error occurred" });
-	  }
-}
+	}
+};
+
 // Like or unlike a review
 module.exports.likeReview = async (req, res) => {
 	try {
-		const userId = req.body.userid;
+		const userId = req.user.id;
 		const reviewId = req.params.id;
 
 		if (!userId) {
@@ -204,9 +193,9 @@ module.exports.likeReview = async (req, res) => {
 		const alreadyLiked = review.likes.includes(userId);
 
 		if (alreadyLiked) {
-			review.likes.pull(userId); // unlike
+			review.likes.pull(userId);
 		} else {
-			review.likes.push(userId); // like
+			review.likes.push(userId);
 		}
 
 		await review.save();
@@ -223,8 +212,6 @@ module.exports.likeReview = async (req, res) => {
 			success: false,
 			message: "Internal server error",
 			error: error.message,
-
-			
 		});
 	}
 };

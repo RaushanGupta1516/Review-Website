@@ -8,6 +8,10 @@
     padding: 12px 30px;
     background: linear-gradient(135deg, #1a1a2e, #16213e);
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
     
 }
 

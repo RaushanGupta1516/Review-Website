@@ -3,9 +3,12 @@ import { jwtDecode } from "jwt-decode";
 import "./Reviewcard.css";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+
 const Reviewcard = ({
 	id,
-	name,
+	placeName,
+	reviewerName,
+	reviewerId,
 	location,
 	reviewText,
 	rating,
@@ -82,17 +85,18 @@ const Reviewcard = ({
 	return (
 		<div className="reviewcard">
 			<Link to={`/review/${id}`} className="reviewcard-link">
-			<div>
-				<img
-					src={image?.url || "/default-image.jpg"}
-					alt="pgpic"
-					className="hostel-img"
-				/>
-			</div>
+				<div>
+					<img
+						src={image?.url || "/images/default-pg.jpg"}
+						alt="pg pic"
+						className="hostel-img"
+					/>
+				</div>
 			</Link>
+
 			<div className="reviewcontent">
 				<div className="nameadd">
-					<h2>{name}</h2>
+					<h2>{placeName}</h2>
 					<p className="location">{location}</p>
 				</div>
 
@@ -106,6 +110,7 @@ const Reviewcard = ({
 							className={`like-btn ${liked ? "liked" : ""}`}
 							onClick={handleLikeClick}
 							disabled={isLiking}
+							aria-label={liked ? "Unlike this review" : "Like this review"}
 						>
 							👍 {likeCount}
 						</button>
@@ -113,7 +118,8 @@ const Reviewcard = ({
 				</div>
 
 				<p className="author-name">
-					Reviewed by: <strong>{name || "Anonymous"}</strong>
+					Reviewed by: <strong>{reviewerName || "Anonymous"}</strong>
+					{userId === reviewerId && <span> (you)</span>}
 				</p>
 
 				<div className="tags">
