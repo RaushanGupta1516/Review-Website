@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import "./Reviewcard.css";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { Link } from "react-router-dom";
 const Reviewcard = ({
 	id,
