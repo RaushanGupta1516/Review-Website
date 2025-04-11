@@ -6,6 +6,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { StoreContext } from "../StoreContext";
 import "./ReviewDetailPage.css";
+import CommentSection from "../components/CommentSection";
 
 const ReviewDetailPage = () => {
     const { id } = useParams(); 
@@ -90,6 +91,7 @@ const ReviewDetailPage = () => {
                     <button className="delete-btn" onClick={handleDelete}>Delete</button>
                 </div>
             )}
+            <CommentSection reviewId={id} />
         </div>
     );
 };

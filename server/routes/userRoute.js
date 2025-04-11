@@ -10,7 +10,7 @@ router.post("/google-login", userController.googleLogin);
 
 router.get("/profile", isverified, async (req, res) => {
 	try {
-		const user = await User.findById(req.user.id).select("-password"); 
+		const user = await User.findById(req.body.userid).select("-password"); 
 		if (!user) {
 			return res.status(404).json({ success: false, message: "User not found" });
 		}

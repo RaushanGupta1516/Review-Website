@@ -6,6 +6,7 @@ require("dotenv").config();
 
 const reviewRoute = require("./routes/reviewRoute.js");
 const userRoute = require("./routes/userRoute.js");
+const commentRoute = require("./routes/commentRoute.js");
 const fileUpload = require("express-fileupload");
 
 const dbUrl = process.env.ATLASDBURL || "mongodb://localhost:27017/staystory";
@@ -36,6 +37,7 @@ main().catch((err) => console.log(err));
 
 app.use("/review", reviewRoute);
 app.use("/user", userRoute);
+app.use("/review/:id/comments", commentRoute); 
 
 app.listen(port, () => {
 	console.log(`Server is running at http://localhost:${port}`);
