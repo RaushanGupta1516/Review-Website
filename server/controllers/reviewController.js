@@ -18,7 +18,6 @@ module.exports.getReviewData = async (req, res) => {
 	}
 };
 
-
 // Add a new review
 module.exports.addReview = async (req, res) => {
 	try {
@@ -26,7 +25,9 @@ module.exports.addReview = async (req, res) => {
 		const file = req.files?.image;
 
 		if (!file) {
-			return res.status(400).json({ success: false, message: "Image file is required." });
+			return res
+				.status(400)
+				.json({ success: false, message: "Image file is required." });
 		}
 
 		// Upload image to Cloudinary
@@ -52,7 +53,7 @@ module.exports.addReview = async (req, res) => {
 				url: uploadResult.url,
 				filename: uploadResult.original_filename,
 			},
-			user: req.user.id,
+			user: req.body.userid,
 			priceRange: req.body.priceRange,
 			roomType: req.body.roomType,
 			facilities: facilities,
@@ -72,7 +73,9 @@ module.exports.addReview = async (req, res) => {
 		console.error("Error adding review:", error);
 		let message = "Error occurred while saving the review.";
 		if (error.name === "ValidationError") {
-			message = Object.values(error.errors).map(err => err.message).join(", ");
+			message = Object.values(error.errors)
+				.map((err) => err.message)
+				.join(", ");
 		}
 		res.status(500).json({
 			success: false,
@@ -100,11 +103,16 @@ module.exports.deleteReview = async (req, res) => {
 	try {
 		const review = await Review.findById(req.params.id);
 		if (!review) {
-			return res.status(404).json({ success: false, message: "Review not found" });
+			return res
+				.status(404)
+				.json({ success: false, message: "Review not found" });
 		}
 
-		if (review.user.toString() !== req.user.id) {
-			return res.status(403).json({ success: false, message: "Unauthorized to delete this review" });
+		if (review.user.toString() !== req.body.userid) {
+			return res.status(403).json({
+				success: false,
+				message: "Unauthorized to delete this review",
+			});
 		}
 
 		await Review.findByIdAndDelete(req.params.id);
@@ -123,7 +131,7 @@ module.exports.updateReview = async (req, res) => {
 			return res.status(404).json({ message: "Review not found" });
 		}
 
-		if (review.user.toString() !== req.user.id) {
+		if (review.user.toString() !== req.body.userid) {
 			return res.status(403).json({ message: "Unauthorized" });
 		}
 
@@ -166,7 +174,11 @@ module.exports.updateReview = async (req, res) => {
 			facilitiesRating: facilitiesRating,
 		};
 
-		const updatedReview = await Review.findByIdAndUpdate(req.params.id, updatedData, { new: true });
+		const updatedReview = await Review.findByIdAndUpdate(
+			req.params.id,
+			updatedData,
+			{ new: true }
+		);
 
 		res.json({ success: true, updatedReview });
 	} catch (error) {
@@ -178,16 +190,20 @@ module.exports.updateReview = async (req, res) => {
 // Like or unlike a review
 module.exports.likeReview = async (req, res) => {
 	try {
-		const userId = req.user.id;
+		const userId = req.body.userid;
 		const reviewId = req.params.id;
 
 		if (!userId) {
-			return res.status(401).json({ success: false, message: "User not logged in" });
+			return res
+				.status(401)
+				.json({ success: false, message: "User not logged in" });
 		}
 
 		const review = await Review.findById(reviewId);
 		if (!review) {
-			return res.status(404).json({ success: false, message: "Review not found" });
+			return res
+				.status(404)
+				.json({ success: false, message: "Review not found" });
 		}
 
 		const alreadyLiked = review.likes.includes(userId);

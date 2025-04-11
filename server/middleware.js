@@ -12,7 +12,7 @@ module.exports.isverified = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, jwtSecret);
-    req.user = decoded; 
+    req.body.userid = decoded.id; 
     next();
   } catch (error) {
     console.error("Token error:", error);

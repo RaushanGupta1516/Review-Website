@@ -4,7 +4,7 @@
   background-color: #000;
   color: #eee;
   padding: 30px;
-  width: 80%; /* updated */
+  width: 80%; /* updated
   max-width: none; /* remove fixed limit */
   margin: 100px auto; /* center + push down */
   font-family: 'Comic Sans MS', cursive;
@@ -76,4 +76,4 @@
 .delete-btn {
   background-color: #f44336;
   color: white;
-}
+} 

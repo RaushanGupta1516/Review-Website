@@ -48,7 +48,6 @@ const ReviewDetailPage = () => {
 
   const isAuthor = user && review.user === user.id;
 
-<<<<<<< HEAD
             {/* Facilities Section */}
             <div className="facilities-section">
                 <h3>Facilities:</h3>
@@ -69,22 +68,13 @@ const ReviewDetailPage = () => {
                 </ul>
             </div>
 
-            
-            {isAuthor && (
-                <div className="review-buttons">
-                     <button className="edit-btn" onClick={() => navigate(`/edit-review/${id}`)}>Edit</button>
-                    <button className="delete-btn" onClick={handleDelete}>Delete</button>
-                </div>
-            )}
-            <CommentSection reviewId={id} />
-=======
+        
   return (
     <div className="review-detail-container">
       <div className="review-content">
         <div className="review-left">
           <h1 className="review-title">{review.name}</h1>
           <img src={review.image.url} alt="pgpic" className="review-detail-img" />
->>>>>>> f728643a70ea1cf7f4487e7e3e2b87e240845684
         </div>
 
         <div className="review-info">
@@ -112,12 +102,14 @@ const ReviewDetailPage = () => {
             </ul>
           </div>
 
+              
           {isAuthor && (
-            <div className="review-buttons">
-              <button className="edit-btn" onClick={() => navigate(`/edit-review/${id}`)}>Edit</button>
-              <button className="delete-btn" onClick={handleDelete}>Delete</button>
-            </div>
-          )}
+                <div className="review-buttons">
+                     <button className="edit-btn" onClick={() => navigate(`/edit-review/${id}`)}>Edit</button>
+                    <button className="delete-btn" onClick={handleDelete}>Delete</button>
+                </div>
+            )}
+            <CommentSection reviewId={id} />
         </div>
       </div>
     </div>
