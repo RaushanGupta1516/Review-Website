@@ -25,7 +25,7 @@ const Nav = ({ setshowLogin }) => {
           <button>Home</button>
         </Link>
         <button>Contact</button>
-        <input type="text" id="search" placeholder="Search Hostel/PG" />
+        
       </div>
 
       <div className="reviewloginbox">

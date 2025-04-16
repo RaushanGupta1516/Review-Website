@@ -1,10 +1,8 @@
-
 import { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { StoreContext } from "../StoreContext";
 import { toast } from "react-toastify";
 import "./CommentSection.css";
-
 
 const CommentSection = ({ reviewId }) => {
 	const { token, user } = useContext(StoreContext);
@@ -35,12 +33,13 @@ const CommentSection = ({ reviewId }) => {
 				{ content: newComment },
 				{ headers: { Authorization: `Bearer ${token}` } }
 			);
-            setComments((prev) => [...prev, res.data.comment]);
-            toast.success("Comment posted successfully.");
+			setComments((prev) => [...prev, res.data.comment]);
+			toast.success("Comment posted successfully.");
 			setNewComment("");
 			setFormVisible(false);
 		} catch (err) {
 			console.error("Failed to post comment", err);
+			toast.error("Failed to post comment.");
 		}
 	};
 
@@ -57,11 +56,11 @@ const CommentSection = ({ reviewId }) => {
 			await axios.delete(`http://localhost:2000/review/${reviewId}/comments/${commentId}`, {
 				headers: { Authorization: `Bearer ${token}` },
 			});
-            setComments(comments.filter((c) => c._id !== commentId));
-            toast.success("Comment deleted successfully.");
+			setComments(comments.filter((c) => c._id !== commentId));
+			toast.success("Comment deleted successfully.");
 		} catch (err) {
-            console.error("Failed to delete comment", err);
-            toast.error("Failed to delete comment.");
+			console.error("Failed to delete comment", err);
+			toast.error("Failed to delete comment.");
 		}
 	};
 
@@ -78,13 +77,15 @@ const CommentSection = ({ reviewId }) => {
 				{ headers: { Authorization: `Bearer ${token}` } }
 			);
 			setComments(
-				comments.map((c) => (c._id === commentId ? { ...c, content: res.data.comment.content } : c))
-            );
-            toast.success("Comment updated successfully.");
+				comments.map((c) =>
+					c._id === commentId ? { ...c, content: res.data.comment.content } : c
+				)
+			);
+			toast.success("Comment updated successfully.");
 			setEditingCommentId(null);
 		} catch (err) {
-            console.error("Failed to update comment", err);
-            toast.error("Failed to update comment.");
+			console.error("Failed to update comment", err);
+			toast.error("Failed to update comment.");
 		}
 	};
 
@@ -98,7 +99,7 @@ const CommentSection = ({ reviewId }) => {
 					<li key={c._id}>
 						<div className="comment-content">
 							<div className="author">
-								@{c.user|| "User"}
+								@{c.username || "User"}
 							</div>
 							{editingCommentId === c._id ? (
 								<>
@@ -111,7 +112,7 @@ const CommentSection = ({ reviewId }) => {
 							) : (
 								<div className="text">{c.content}</div>
 							)}
-							{user?.id === c.user && (
+							{user?.id === c.userId && (
 								<div className="comment-actions">
 									<button onClick={() => handleEdit(c._id, c.content)}>Edit</button>
 									<button onClick={() => handleDelete(c._id)}>Delete</button>
@@ -141,4 +142,3 @@ const CommentSection = ({ reviewId }) => {
 };
 
 export default CommentSection;
-

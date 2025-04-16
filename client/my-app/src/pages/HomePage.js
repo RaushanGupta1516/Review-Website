@@ -1,12 +1,14 @@
+import React from "react";
+import DisplayReviews from "../components/DisplayReviews";
+import Search from "../components/Search";
 
-import React from 'react'
-import DisplayReviews from '../components/DisplayReviews';
-
- const HomePage = () => {
+const HomePage = () => {
   return (
-    <div>
-      <DisplayReviews />
+    <div style={{ marginTop: "120px" }}>
+      <Search />
+      {/* <DisplayReviews /> */}
     </div>
-  )
-}
+  );
+};
+
 export default HomePage;

@@ -122,4 +122,30 @@
 .like-btn:hover, .dislike-btn:hover {
     background: #333;
 }
-
+/* Clamp long review text */
+.review-text.clamped {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;  /* Show only 2 lines */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  /* Read More / Read Less Button */
+  .read-more {
+    color: #ffcc00;
+    font-weight: 500;
+    font-size: 13px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-top: -8px;
+    margin-bottom: 10px;
+    padding: 0;
+    display: inline-block;
+  }
+  
+  .read-more:hover {
+    text-decoration: underline;
+  }
+  
